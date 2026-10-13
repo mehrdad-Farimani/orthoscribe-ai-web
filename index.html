@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-font="17">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#087e79">
+  <meta name="description" content="OrthoScribe AI is an orthodontic appointment and chart-note workspace. Try the clearly labeled fictional demonstration or connect your clinic's approved service.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://appleid.cdn-apple.com; style-src 'self'; img-src 'self' data:; connect-src 'self' https: wss: http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000; frame-src https://appleid.apple.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://appleid.apple.com">
+  <title>OrthoScribe AI</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to workspace</a>
+  <div id="app">
+    <main class="boot-screen" aria-busy="true">
+      <img src="./assets/logo.svg" width="72" height="72" alt="">
+      <h1>OrthoScribe AI</h1>
+      <p>Opening your workspace…</p>
+    </main>
+  </div>
+  <noscript>This application requires JavaScript. Enable JavaScript to open the demonstration or connect to your clinic.</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
