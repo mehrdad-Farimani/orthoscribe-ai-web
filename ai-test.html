@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#087e79">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://*.workers.dev; img-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>Free AI Test | OrthoScribe AI</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="./ai-test.css">
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to workspace</a>
+  <header class="topbar"><a class="brand" href="./"><img src="./assets/logo.svg" width="36" height="36" alt=""><span>OrthoScribe <b>AI</b></span></a><a href="./">Back to demo</a></header>
+  <main id="workspace">
+    <div class="heading"><div><p class="eyebrow">FREE-TIER PROTOTYPE / V0.3.0</p><h1>Your conversation.<br>Your reviewed note.</h1><p class="intro">Record a fictional appointment, review the transcript, then draft a brief note.</p></div><span id="connection-status" class="badge">Not connected</span></div>
+    <aside class="warning"><strong>Fictional practice only. No real patient information.</strong><p>This prototype is not a clinical or HIPAA-compliant service. Audio and transcript requests go through your Cloudflare Worker to Groq. No live transcription, speaker separation, cloud note storage, or email delivery. Free-tier limits apply.</p></aside>
+    <p id="message" role="status" aria-live="polite" class="message">Set up your Worker below, or load the fictional transcript to explore the screen.</p>
+    <details class="card setup" id="setup" open>
+      <summary><span class="step">01</span> Connect your test service</summary>
+      <p>Keep your <strong>Groq API key in Cloudflare</strong>. The separate test access key below opens this test service only.</p>
+      <label for="worker-url">Cloudflare Worker URL</label><input id="worker-url" type="url" inputmode="url" placeholder="https://orthoscribe-ai-test.your-subdomain.workers.dev" autocomplete="off" spellcheck="false">
+      <label for="access-key">Test access key <span class="muted">(not the Groq API key)</span></label><input id="access-key" type="password" autocomplete="off" spellcheck="false" placeholder="ost_…">
+      <div class="actions"><button id="connect" class="primary" type="button">Connect test service</button><button id="disconnect" type="button" disabled>Disconnect and clear</button></div>
+      <details class="setup-help"><summary>First-time setup: create a test access key</summary><p>Generate a random key here. Copy it into a Cloudflare <strong>Secret</strong> named <code>TEST_ACCESS_KEY</code>. Enter the same key in this page to connect. Save it in your password manager. It is not saved by this website.</p><div class="actions"><button id="make-key" type="button">Generate test access key</button><button id="copy-key" type="button">Copy test access key</button></div></details>
+      <p class="muted">Connection testing checks Worker configuration, not Groq billing or model access. An actual transcription or draft request checks the provider connection. This page clears on reload and locks after 10 minutes without interaction.</p>
+    </details>
+    <div class="columns">
+      <div class="column">
+        <section class="card"><div class="section-title"><span class="step">02</span><h2>Practice appointment</h2></div>
+          <label for="appointment">Appointment type</label><select id="appointment"></select>
+          <label for="signoff">Note sign-off</label><input id="signoff" value="Dr. Reza" maxlength="100" autocomplete="off">
+          <label class="check"><input id="fictional" type="checkbox"><span>I confirm this session contains only fictional practice content, and everyone being recorded has agreed.</span></label>
+          <div class="recordbox"><span id="record-status">Microphone off</span><output id="elapsed" aria-label="Elapsed recording time">00:00</output><span class="muted">English · Maximum 3 minutes / 4 MiB</span></div>
+          <div class="actions"><button id="start" type="button" class="primary" disabled>Start recording</button><button id="stop" type="button" disabled>End and transcribe</button></div>
+          <p class="muted">Keep Safari in the foreground and your phone unlocked. An interruption stops recording without uploading it.</p>
+          <audio id="playback" controls hidden aria-label="Review your fictional recording"></audio>
+          <button id="transcribe" type="button" hidden>Transcribe captured recording</button>
+          <button id="clear" class="text-button" type="button">Clear this practice session</button>
+        </section>
+        <section class="card"><div class="section-title"><span class="step">03</span><h2>Review the transcript</h2></div>
+          <button id="sample" type="button" class="text-button">Load a fictional example</button>
+          <label for="transcript">Fictional transcript <span class="muted">or paste practice dialogue</span></label><textarea id="transcript" rows="10" maxlength="4500" placeholder="No patient names, identifiers, or real appointment details."></textarea><p id="count" class="muted">0 / 4500 characters</p>
+          <p class="muted">No speaker roles are inferred. Correct transcription errors and label speakers yourself when needed. Preserve uncertain wording.</p>
+          <label class="check"><input id="transcript-reviewed" type="checkbox"><span>I checked the transcript, speaker attribution, tooth references, numbers, and treatment status.</span></label>
+          <button id="generate" type="button" class="primary full" disabled>Generate draft note</button>
+        </section>
+      </div>
+      <div class="column">
+        <section class="card note-card"><div class="section-title"><span class="step">04</span><h2>Review and copy</h2><span class="badge">Draft only</span></div>
+          <p>Brief wording, separate NV / NNV plans and case notes, followed by your sign-off. The sign-off is text, not authentication.</p>
+          <label for="note">Final practice note</label><textarea id="note" rows="11" placeholder="Your generated draft appears here." disabled></textarea>
+          <p id="draft-status" class="muted">Nothing has been generated. No sample findings are inserted automatically.</p>
+          <div id="flags" class="flags" hidden><h3>Review flags</h3><ul id="flag-list"></ul><label class="check"><input id="flags-reviewed" type="checkbox"><span>I addressed these flags in the final practice note.</span></label></div>
+          <details id="evidence-panel" hidden><summary>Statements and transcript evidence</summary><div id="evidence"></div></details>
+          <label class="check"><input id="final-reviewed" type="checkbox" disabled><span>I compared the entire draft to the transcript, corrected omissions or errors, and reviewed the final text.</span></label>
+          <button id="copy" type="button" class="primary full" disabled>Copy reviewed note</button>
+          <p class="muted">Copies only the note text, with no explanation or metadata. No email is sent. Two AI passes and evidence checks do not guarantee accuracy.</p>
+        </section>
+        <aside class="card quiet"><h2>What stays where</h2><p>The page holds audio, transcript, draft and test access key in memory. It does not save them to browser storage. Copying deliberately places the note on your device clipboard.</p><p>The Worker does not persist content or log request bodies. Cloudflare and Groq still process requests under their own account settings and data policies. Do not treat this as a zero-retention service.</p></aside>
+      </div>
+    </div>
+    <footer>OrthoScribe AI · Free-tier practice mode · For evaluation, not patient care.</footer>
+  </main>
+  <noscript>Enable JavaScript to use this practice screen.</noscript>
+  <script type="module" src="./ai-test.js"></script>
+</body>
+</html>

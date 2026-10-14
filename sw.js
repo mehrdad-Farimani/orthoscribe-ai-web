@@ -1,6 +1,7 @@
 const CACHE_PREFIX = 'orthoscribe-demo-shell-';
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const ASSETS = [
+  './ai-test.html', './ai-test.css', './ai-test.js', './ai-test-core.js',
   './', './index.html', './styles.css', './app.js', './controller.js', './ui.js', './domain.js', './data.js', './note-style.js',
   './config.js', './bridge.js', './recorder.js', './recorder-worklet.js', './pcm.js', './vault.js',
   './manifest.webmanifest', './assets/logo.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/apple-touch-icon.png',
